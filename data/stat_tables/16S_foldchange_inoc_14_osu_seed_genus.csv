@@ -1,0 +1,9 @@
+"","baseMean","log2FoldChange","lfcSE","stat","pvalue","padj","Kingdom","Phylum","Class","Order","Family","Genus","Species"
+"67",19.7136842420533,1.88250351125309,0.516799268393034,3.64262031002221,0.000269876772183806,0.00303611368706782,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Streptococcaceae","Streptococcus",NA
+"252",29.3313817865115,-2.24528912162507,0.585545962047226,-3.83452242378197,0.000125808495302133,0.001887127429532,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Streptomycetaceae","Streptomyces","mirabilis"
+"41",69.1589900905177,4.12066134483757,0.984633510931645,4.18496963498497,2.85204223229661e-05,0.000641709502266736,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Nocardiaceae","Rhodococcus",NA
+"New.ReferenceOTU507",14.1642421542266,2.50189345029024,0.772352237300584,3.23931663490029,0.00119816479560977,0.0107834831604879,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Aerococcaceae","Facklamia",NA
+"27",4.93245543853799,-2.57756762359778,0.84904081412418,-3.03585832473395,0.00239852036644571,0.0179889027483428,"Bacteria","Bacteroidetes","Flavobacteriia","Flavobacteriales","[Weeksellaceae]","Chryseobacterium",NA
+"1",463.080102250684,5.36052237114309,0.653039707988909,8.20857032974499,2.23837683815943e-16,1.00726957717174e-14,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA
+"4626",1.74925967557277,3.59847877904852,1.29670080015339,2.77510338439125,0.00551841624255206,0.0342838217159353,"Bacteria","Proteobacteria","Betaproteobacteria","Burkholderiales","Comamonadaceae","Hylemonella",NA
+"3564",17.6572161175853,2.02451121147431,0.738163736336278,2.74263163010764,0.0060949016383885,0.0342838217159353,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Microbacteriaceae","Microbacterium",NA

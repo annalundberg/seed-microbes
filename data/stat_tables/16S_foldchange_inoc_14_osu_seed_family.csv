@@ -1,0 +1,8 @@
+"","baseMean","log2FoldChange","lfcSE","stat","pvalue","padj","Kingdom","Phylum","Class","Order","Family","Genus","Species"
+"67",18.7687110776364,1.71093455829637,0.48079762963502,3.55853367995006,0.000372930975902454,0.00326314603914648,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Streptococcaceae","Streptococcus",NA
+"252",29.3371251267336,-2.25868139805648,0.558047251672548,-4.04747338381632,5.17734670267407e-05,0.000906035672967962,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Streptomycetaceae","Streptomyces","mirabilis"
+"41",51.768284601212,3.50062803575572,0.92401688028992,3.7884892694356,0.000151566137962274,0.00176827160955986,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Nocardiaceae","Rhodococcus",NA
+"189",3.51971713957812,-4.51661270760362,1.30100225284917,-3.47164095812464,0.000517287678562835,0.00362101374993984,"Bacteria","Proteobacteria","Betaproteobacteria","Rhodocyclales","Rhodocyclaceae","Dechloromonas",NA
+"1",505.347284524471,5.38214909855865,0.644334431075326,8.35303662040288,6.6530012297646e-17,2.32855043041761e-15,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA
+"2",312.499671899046,1.56746786704649,0.519586766619408,3.01675863926427,0.00255493154243365,0.014903767330863,"Bacteria","Proteobacteria","Betaproteobacteria","Burkholderiales","Comamonadaceae","Delftia",NA
+"3564",19.7394926155949,1.99301034574786,0.690188394847111,2.88763236331922,0.00388153253498135,0.0194076626749068,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Microbacteriaceae","Microbacterium",NA

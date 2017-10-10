@@ -1,0 +1,9 @@
+"","baseMean","log2FoldChange","lfcSE","stat","pvalue","padj","Kingdom","Phylum","Class","Order","Family","Genus","Species"
+"152",1.23877349814497,-3.13850888417768,1.03549679288071,-3.03092091231542,0.00243809100371458,0.0139319485926547,"Bacteria","Proteobacteria","Betaproteobacteria","Burkholderiales","Comamonadaceae","Methylibium",NA
+"21",20.7895649661581,1.20187739491622,0.427098432243008,2.81405246234289,0.00489212437463903,0.0244606218731952,"Bacteria","Proteobacteria","Alphaproteobacteria","Sphingomonadales","Sphingomonadaceae","Sphingomonas",NA
+"62",18.0309111613071,-3.23334544567082,1.01669165802248,-3.18026160651288,0.00147142151321171,0.0102922616961089,"Bacteria","Proteobacteria","Alphaproteobacteria","Rhizobiales","Rhizobiaceae","Rhizobium",NA
+"252",15.2543786800477,-2.12680933438189,0.671698759179034,-3.16631422243704,0.00154383925441633,0.0102922616961089,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Streptomycetaceae","Streptomyces","mirabilis"
+"41",24.4214604344106,3.17383147869991,0.901035451246803,3.52242686379114,0.000427615009701672,0.00855230019403344,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Nocardiaceae","Rhodococcus",NA
+"New.ReferenceOTU507",10.5061237210054,1.92618586026055,0.564775610235075,3.41053300700931,0.000648360358977311,0.00864480478636415,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Aerococcaceae","Facklamia",NA
+"2272",2.15429400605978,-3.20800090569115,0.971245944613454,-3.30297482680136,0.000956649752388046,0.00956649752388046,"Bacteria","Proteobacteria","Alphaproteobacteria","Sphingomonadales","Sphingomonadaceae","Sphingobium",NA
+"1",238.761343442961,4.61086540863625,0.538041469162438,8.56972124437531,1.03735839205058e-17,4.1494335682023e-16,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA
