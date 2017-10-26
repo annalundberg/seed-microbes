@@ -1,0 +1,120 @@
+---
+title: "Field Study Data Analysis"
+author: "Lucas Nebert"
+date: "`r date()`"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/home/lucas/Main/Illumina/seed-microbes/dada2/16S_final")
+
+library(ggplot2)
+library(reshape2)
+library(phyloseq)
+library(dplyr)
+library(vegan)
+
+
+set.seed(100)
+```
+
+
+Project Aims:
+1. Determine main differences between bacterial and fungal endophyte communities between corn crowns and seeds
+2. Delineate likely sources for seed associated endophytes, including crown, silk, and soil
+3. Find putative microbe-microbe relationships through co-occurrence patterns
+4. Determine functional significance of bacterial and fungal endophytes on plant disease status
+
+
+Aim 1. Determine main differences between bacterial and fungal endophyte communities between corn crowns and seeds
+
+Subset samples to include only the "controls" i.e. those that were not treated in any way, in addition to corn silks and soil
+```{r subset samples}
+ps0 <- readRDS("16S.ps.Rds")
+ps1 <-subset_samples(ps0, Disinfection != 1 & Inoculation != 1 | DNA_plate_number == 3)
+ps1 <- prune_taxa(taxa_sums(ps1) > 0, ps1)
+ps1
+
+```
+
+
+```{r make tree}
+ps.genus <- tax_glom(ps1,"Genus", NArm =TRUE)
+ps.class <- tax_glom(ps1,"Class", NArm =TRUE)
+
+taxa_names(ps.genus) <- tax_table(ps.genus)[,6]
+plot_tree(ps.genus, method='treeonly', ladderize="left",label.tips="taxa_names")
+taxa_names(ps.class) <- tax_table(ps.class)[,3]
+plot_tree(ps.class, method='treeonly', ladderize="left",label.tips="taxa_names")
+```
+Alpha Diversity
+
+```{r alpha diversity}
+p <- plot_richness(ps1, color = "Tissue", x = "Tissue", measures = c("Observed", "Chao1", "Shannon", "Simpson", "InvSimpson"))
+p <- p + geom_boxplot(aes(fill = Tissue), alpha=0.1)
+plot(p)
+
+plot(sort(sample_sums(ps1)))
+
+ps1 <- add_alpha_diversity(ps1)
+ps1 <- add_alpha_rarefaction(ps1)
+
+```
+
+
+Ordinate the data
+```{r ordinations}
+ord = ordinate(ps1, method = "NMDS", distance = "bray")
+plot_ordination(ps1, ord, color = "Tissue") + ggtitle("NMDS: Bray-Curtis")
+
+ord = ordinate(ps1, method = "NMDS", distance = "unifrac")
+plot_ordination(ps1, ord, color = "Tissue") + ggtitle("NMDS: UniFrac")
+
+
+# remove sample 2, outlier
+ps2 <- subset_samples(ps1,SampleID!="Sample2")
+
+ord = ordinate(ps2, method = "NMDS", distance = "bray")
+plot_ordination(ps2, ord, color = "Tissue") + ggtitle("NMDS: Bray-Curtis") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ord = ordinate(ps2, method = "NMDS", distance = "unifrac")
+plot_ordination(ps2, ord, color = "Tissue") + ggtitle("NMDS: UniFrac")
+
+ord = ordinate(ps2, method = "PCoA", distance = "bray")
+plot_ordination(ps2, ord, color = "Tissue") + ggtitle("PCoA: Bray-Curtis")
+
+```
+```{r contstrained ordination}
+ps1 <- subset_samples
+
+```
+
+```{r shared}
+taxa_names(ps1) <- paste0("RSV_",seq(1,length(taxa_names(ps1))))
+
+ps1.pa <- transform_sample_counts(ps1,function(x)1*(x>0))
+
+library("betapart")
+shared <- data.frame(betapart.core(otu_table(ps1.pa))$shared)
+
+
+
+library(plyr)
+psm <- psmelt(ps)
+sd <- sample_data(ps1)
+View(sd)
+
+
+df <- data.frame(sd$Tissue, sd$Sample_type)
+rownames(df) <- rownames(sd)
+
+a <- aggregate(data=sample_data(ps1),SampleID ~ Tissue)
+```
+
+ps.ds <- readRDS("16S.ps.ds.Rds")
+ps.pa <- readRDS("16S.ps.pa.Rds")
+ps.ra <- readRDS("16S.ps.ra.Rds")
