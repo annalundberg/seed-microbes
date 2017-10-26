@@ -2,3 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
+
+raw_fastq
+dada2
+pear_assembly
+prefilter
+reference_database
+seed-microbes.Rproj
+swarm
+vsearch
+
