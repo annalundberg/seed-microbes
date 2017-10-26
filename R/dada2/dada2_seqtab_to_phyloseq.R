@@ -39,14 +39,14 @@ ncol(st2_nc) # 870
 100-100*(sum(colSums(st2_nc))/sum(colSums(st2))) # 9.54% of all sequences are chimeric
 
 
-st0_chimeras <- st0[,!(colnames(st0) %in% colnames(st0_nc))]
-st1_chimeras <- st1[,!(colnames(st1) %in% colnames(st1_nc))]
-st2_chimeras <- st2[,!(colnames(st2) %in% colnames(st2_nc))]
-
-taxa0_chimeras <- assignTaxonomy(st0_chimeras, "../../reference_database/RDP/rdp_train_set_16.fa.gz", multithread=TRUE)
-taxa1_chimeras <- assignTaxonomy(st1_chimeras, "../../reference_database/RDP/rdp_train_set_16.fa.gz", multithread=TRUE)
-taxa2_chimeras <- assignTaxonomy(st2_chimeras, "../../reference_database/RDP/rdp_train_set_16.fa.gz", multithread=TRUE)
-
+# st0_chimeras <- st0[,!(colnames(st0) %in% colnames(st0_nc))]
+# st1_chimeras <- st1[,!(colnames(st1) %in% colnames(st1_nc))]
+# st2_chimeras <- st2[,!(colnames(st2) %in% colnames(st2_nc))]
+# 
+# taxa0_chimeras <- assignTaxonomy(st0_chimeras, "../../reference_database/RDP/rdp_train_set_16.fa.gz", multithread=TRUE)
+# taxa1_chimeras <- assignTaxonomy(st1_chimeras, "../../reference_database/RDP/rdp_train_set_16.fa.gz", multithread=TRUE)
+# taxa2_chimeras <- assignTaxonomy(st2_chimeras, "../../reference_database/RDP/rdp_train_set_16.fa.gz", multithread=TRUE)
+# 
 
 
 # I feel good about these numbers - I'll go ahead and go with the chimera-free sequence tables
@@ -146,22 +146,41 @@ setwd(paste0("/home/lucas/Main/Illumina/seed-microbes/dada2/",amplicon,"_final")
 saveRDS(st12,file=paste0(amplicon,"_seqtab.Rds"))
 write.csv(st12, paste0(amplicon,"_seqtab.csv", sep = ",", col.names=NA))
 
-taxa12_rdp <- assignTaxonomy(st12, "../../reference_database/RDP/rdp_train_set_16.fa.gz", multithread=TRUE)
-taxa12_rdp_spp <- addSpecies(taxa12_rdp, "../../reference_database/RDP/rdp_species_assignment_16.fa.gz", verbose=TRUE, allowMultiple=TRUE)
-saveRDS(taxa12_rdp,file=paste0(amplicon,"_rdp_taxtab.Rds"))
-write.csv(taxa12_rdp, paste0(amplicon,"_rdp_taxtab.csv", sep = ",", col.names=NA))
-saveRDS(taxa12_rdp_spp,file=paste0(amplicon,"_rdp_taxtab_spp.Rds"))
-write.csv(taxa12_rdp_spp, paste0(amplicon,"_rdp_taxtab_spp.csv", sep = ",", col.names=NA))
 
 taxa12_silva <- assignTaxonomy(st12, "../../reference_database/SILVA/silva_nr_v128_train_set.fa.gz", multithread=TRUE)
 taxa12_silva_spp <- addSpecies(taxa12_silva, "../../reference_database/SILVA/silva_species_assignment_v123.fa.gz", verbose=TRUE, allowMultiple=TRUE)
-
 saveRDS(taxa12_silva,file=paste0(amplicon,"_silva_taxtab.Rds"))
-write.csv(taxa12_silva, paste0(amplicon,"_silva_taxtab.csv", sep = ",", col.names=NA))
+write.csv(taxa12_silva, paste0(amplicon,"_silva_taxtab.csv", col.names=NA))
 saveRDS(taxa12_silva_spp,file=paste0(amplicon,"_silva_taxtab_spp.Rds"))
-write.csv(taxa12_silva_spp, paste0(amplicon,"_silva_taxtab_spp.csv", sep = ",", col.names=NA))
+write.csv(taxa12_silva_spp, paste0(amplicon,"_silva_taxtab_spp.csv"), col.names=NA)
 
-### Make phyloseq object 
+st12 <- readRDS("16S_seqtab.Rds")
 
-ps <- phyloseq(otu_table(st12, taxa_are_rows=FALSE),
-               tax_table(taxa12_silva_spp))
+# Construct Phylogenetic Tree
+# Code sourced from: https://f1000research.com/articles/5-1492/v2
+
+#Sort by higher-abundance taxa
+st12 <- st12[,order(colSums(st12), decreasing=TRUE)]
+
+library("DECIPHER")
+# Multiple sequence alignment of sequence variants
+seqs <- getSequences(st12)
+names(seqs) <- seqs
+alignment <- AlignSeqs(DNAStringSet(seqs), anchor=NA)
+saveRDS(ma,"16S_alignment.Rds")
+ma <- readRDS("16S_alignment.Rds")
+
+# Build a maximum likelihood tree from a neighbor-joining tree
+library("phangorn")
+phang.align <- as.phyDat(as(alignment,"matrix"), type="DNA")
+dm <- dist.ml(phang.align)
+treeNJ <- NJ(dm)
+fit = pml(treeNJ, data=phang.align)
+fitGTR <- update(fit, k=4, inv=0.2)
+fitGTR <- optim.pml(fitGTR, model="GTR", optInv=TRUE, optGamma=TRUE,
+                    rearrangement = "stochastic", control = pml.control(trace = 0))
+saveRDS(fitGTR,"16S_pml_tree.Rds")
+saveRDS(fitGTR$tree,"16S_tree.Rds")
+
+detach("package:phangorn", unload=TRUE)
+
