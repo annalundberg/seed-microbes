@@ -1,0 +1,128 @@
+---
+title: "Field Study Data Analysis"
+author: "Lucas Nebert"
+date: "`r date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/home/lucas/Main/Illumina/seed-microbes/dada2/16S_final")
+
+library(dada2); packageVersion("dada2")
+library(ggplot2); packageVersion("ggplot2")
+library(phyloseq); packageVersion("phyloseq")
+library("DESeq2")
+library(vegan)
+library(psych)
+library(biom)
+
+set.seed(100)
+```
+
+Create Phyloseq Object
+
+
+```{r Create Phyloseq Object}
+# Import sequence table generated from dada2, to be used as otu_table in phyloseq
+seqtab <- readRDS('16S_seqtab.Rds')
+# Rename samples names to include "Sample" in front of each sample number
+rownames(seqtab) <- paste("Sample",rownames(seqtab),sep="")
+
+# Import taxa table, sample data, tree and create phyloseq object
+taxtab <- readRDS('16S_silva_taxtab_spp.Rds')
+sd <- read.csv("../../data/mapping/field_mapping.csv", row.names = 1)
+tree <- readRDS('16S_tree.Rds')
+ps <- phyloseq(otu_table(seqtab, taxa_are_rows=FALSE),
+               tax_table(taxtab),
+               sample_data(sd),
+               phy_tree(tree))
+
+```
+
+```{r preprocess}
+#remove samples with less than 100 sequences
+ps <- prune_samples(names(which(sample_sums(ps) >= 100)),ps)
+# remove negative controls
+ps <-subset_samples(ps, Sample_type != "DNA_control")
+# Remove putative bacterial contaminants (see contaminants.R file for details)
+contaminants <- readRDS("contaminant_otus.Rds")
+ps <- prune_taxa(taxa_names(ps)[!taxa_names(ps) %in% contaminants],ps)
+#Only keep taxa occuring more than three times total
+ps<- prune_taxa(taxa_sums(ps) > 3, ps)
+# #Use p/a table to identify sample counts per OTU, filter out those not in more than one sample
+ps <- prune_taxa(taxa_sums(ps.pa) > 1, ps)
+
+# Create presence/absernce ps object
+ps.pa <- transform_sample_counts(ps,function(x)1*(x>0))
+
+# Create relative abundance ps object
+ps.ra <- transform_sample_counts(ps,function(x)x/sum(x))
+```
+
+
+```
+
+
+Examine 
+
+```{r}
+sums = data.frame(sum=sample_sums(ps))
+#median(sums[,1])
+ggplot(sums, aes(x = sum)) + 
+  geom_histogram(color = "black", fill = "indianred", binwidth = 1000) +
+  ggtitle("Distribution of sample sequencing depth 16S") + 
+  xlab("Read counts") +
+  theme(axis.title.y = element_blank())
+```
+
+The read distribution is quite uneven. Let's remove samples with very low reads (<100)
+
+```{r}
+
+```
+
+
+
+
+```{r}
+ps.ds <- readRDS("16S.ps.ds.Rds")
+ps.ds.bray <- phyloseq::distance(ps.ds, method = "bray")
+
+ord = ordinate(ps, method = "NMDS", distance = "bray")
+plot_ordination(ps, ord, color = "Tissue") + ggtitle("NMDS: Bray-Curtis")
+```
+
+```{r}
+ps.seeds <- subset_samples(ps, Sample_type=="Seed" & Experiment==1)
+bray_16S.seeds <- phyloseq::distance(ps.seeds, method = "bray")
+ord.seeds = ordinate(ps.seeds, method = "NMDS", distance = bray_16S.seeds)
+
+sample_data(ps.seeds)$Inoculation <- factor(sample_data(ps.seeds)$Inoculation) 
+plot_ordination(ps.seeds, ord.seeds, color = "Year") + ggtitle("NMDS: Bray-Curtis Seeds by Year")
+plot_ordination(ps.seeds, ord.seeds, color = "Farm") + ggtitle("NMDS: Bray-Curtis Seeds by Farm")
+plot_ordination(ps.seeds, ord.seeds, color = "Inoculation") + ggtitle("NMDS: Bray-Curtis Seeds by Farm")
+```
+
+```{r}
+ps.seeds.14 <- subset_samples(ps.seeds, Year==2014)
+bray_16S.seeds.14 <- phyloseq::distance(ps.seeds.14, method = "bray")
+ord.seeds.14 = ordinate(ps.seeds.14, method = "NMDS", distance = bray_16S.seeds.14)
+
+
+plot_ordination(ps.seeds.14, ord.seeds.14, color = "Farm", shape= "Inoculation") + ggtitle("NMDS: Bray-Curtis 2014 Seeds by Farm") + geom_point(size=3)
+
+```
+
+
+ps.seeds <- subset_samples(ps, Sample_type=="Seed)
+
+
+rank_names(ps)
+
+df = as(sample_data(ps), "data.frame")
+d = phyloseq::distance(ps, "bray")
+View(df)
+
+adonis = adonis(d ~ Year + Tissue + Farm + Disinfection, df)
+adonis
