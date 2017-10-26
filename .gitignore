@@ -11,4 +11,5 @@ reference_database
 seed-microbes.Rproj
 swarm
 vsearch
-
+R/older_dada2_scripts
+R/example_code
