@@ -71,7 +71,7 @@ ps <- ps_ITS
 #badcontrols = otu_table(ps)[,c("Sample192","Sample96","Sample235","Sample236","Sample269","Sample270","Sample271","Sample272")]
 
 
-sums = data.frame(sum=sample_sums(ps_16S))
+sums = data.frame(sum=sample_sums(ps))
 median(sums[,1])
 ggplot(sums, aes(x = sum)) + 
   geom_histogram(color = "black", fill = "indianred", binwidth = 1000) +
@@ -223,7 +223,7 @@ ggplot(ps_ITS_class, aes(x = Tissue, y = Abundance, fill = Class)) +
 ########### Put all of them in a data_models list of experiments and corresponding models used ##################################
 
 #sample data
-sd <- data.frame(sample_data(ps_ITS))
+sd <- data.frame(sample_data(ps))
 sd
 
 # Data from all years

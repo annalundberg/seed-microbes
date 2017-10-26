@@ -22,11 +22,15 @@ fnRs <- file.path(path, fnRs)
 # plotQualityProfile(fnRs[[1]])
 
 # Make directory and filenames for the filtered fastqs
+
 filt_path <- file.path(path, "filtered")
 if(!file_test("-d", filt_path)) 
   dir.create(filt_path)
 filtFs <- file.path(filt_path, paste0(sample.names, "_F_filt.fastq.gz"))
 filtRs <- file.path(filt_path, paste0(sample.names, "_R_filt.fastq.gz"))
+names(filtFs) <- sample.names
+names(filtRs) <- sample.names
+
 # Filter. 
 #I opted not to use trunclen parameter in order to save shorter ITS sequences that otherwise would have been truncated too short
 #I tested different maxEE scores, and maxEE=12 filtered out ~25-50% of sequences
@@ -38,18 +42,14 @@ filtRs <- file.path(filt_path, paste0(sample.names, "_R_filt.fastq.gz"))
 # }
 
 ############################################################3
-
-
 # NEW tutorial suggestion. Automatically uses 1 million reads to determine error rate, randomize option selects random sequences
 # FORWARD
-# names(filtFs) <- sample.names
 # # Learn error rates using standard method
 # errF <- learnErrors(filtFs, multithread=TRUE, randomize=TRUE)
 # plotErrors(errF, nominalQ=TRUE)
 # save(errF,file='filtered/errF.Rdata')
 # 
 # # REVERSE
-# names(filtRs) <- sample.names
 # # Learn error rates using standard method
 # errR <- learnErrors(filtRs, multithread=TRUE, randomize=TRUE)
 # plotErrors(errR, nominalQ=TRUE)
