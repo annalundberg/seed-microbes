@@ -1,0 +1,95 @@
+#! /usr/bin/env python3
+
+### This script parses fastq files into 4 folders based on primer identity: 16S(799F-1193R), ITS1, shared ID's and rejects.####
+# It reads the forward file only (usually better quality) and fills in the reverse file accordingly.
+### I refined it using my data to maximize accepts but still distinguish between bacterial and fungal sequences.###
+
+
+# General usage parse_microbes.py [forward.fastq] [OPTIONAL output diectory]
+# With this script in the same folder as the fastqfiles, for example run 1, type: for f in *R1_run1.fastq; do python parse_microbes.py $f; done
+
+import sys
+import os
+
+
+def main():
+    fastqFname = str(sys.argv[1])
+    fastqRname = fastqFname.replace('R1','R2') 
+    writedir = "./"
+    if len(sys.argv) > 2:
+        writedir = str(sys.argv[2])
+    if not os.path.exists(writedir):
+        os.makedirs(writedir)
+    F_16S = open(writedir+"16S_"+fastqFname, 'w')
+    R_16S = open(writedir+"16S_"+fastqRname, 'w')
+    F_ITS = open(writedir+"ITS_"+fastqFname, 'w')
+    R_ITS = open(writedir+"ITS_"+fastqRname, 'w')
+    if not os.path.exists(writedir+'assign_shared'):
+        os.makedirs(writedir+'assign_shared')
+    sharedF = open(writedir+"assign_shared/shared_"+fastqFname, 'w')
+    sharedR = open(writedir+"assign_shared/shared_"+fastqRname, 'w')
+    if not os.path.exists(writedir+'assign_rejects/'):
+        os.makedirs(writedir+'assign_rejects/')
+    rejectsF = open(writedir+"assign_rejects/rejects_"+fastqFname, 'w')
+    rejectsR = open(writedir+"assign_rejects/rejects_"+fastqRname, 'w')
+    counter = 1
+    linecount=1
+    bact = 'AGATAC'
+    fung = 'GTAAA'
+    write16S = 0
+    writeITS = 0
+    with open(fastqFname) as fastqF, open(fastqRname) as fastqR:
+        for lineF,lineR in zip(fastqF, fastqR):
+            if counter > 4:
+                counter = 1
+            if lineF[0] == '@' and counter == 1:
+                headF = lineF.rstrip()
+                headR = lineR.rstrip()
+                if headF[-2:-1] == '/': # remove bowtie2 header adjustment
+                    headF =  headF[:-2]
+                if headR[-2:-1] == '/': # remove bowtie2 header adjustment
+                    headR =  headR[:-2] 
+                if headF != headR:
+                    sys.exit("F and R sequence headers do not match")
+                head = headF+'\n'
+            if counter == 2:
+                seqF = lineF
+                seqR = lineR
+                if bact in seqF[2:20]:
+                    write16S = 1
+                if fung in seqF[2:20]:
+                    writeITS = 1
+            if counter == 4:
+                qualF = lineF
+                qualR = lineR
+                if write16S == 1 and writeITS ==1:
+                    sharedF.write(head+seqF+'+\n'+qualF)
+                    sharedR.write(head+seqR+'+\n'+qualR)
+                    write16S = 0
+                    writeITS = 0
+                elif write16S == 1:
+                    F_16S.write(head+seqF+'+\n'+qualF)
+                    R_16S.write(head+seqR+'+\n'+qualR)
+                    write16S = 0
+                elif writeITS == 1:
+                    F_ITS.write(head+seqF+'+\n'+qualF)
+                    R_ITS.write(head+seqR+'+\n'+qualR)
+                    writeITS = 0
+                else:
+                    rejectsF.write(head+seqF+'+\n'+qualF)
+                    rejectsR.write(head+seqR+'+\n'+qualR)
+            counter = counter + 1 
+            linecount = linecount + 1     
+    R1_16S.close()
+    R2_16S.close()
+    R1_ITS.close()
+    R2_ITS.close()
+    rejectsF.close()
+    rejectsR.close()        
+    fastqF.close()   
+    if 'sharedF' in locals() or 'sharedF' in globals():
+        sharedF.close()
+        sharedR.close()    
+
+if __name__ == "__main__":
+    main()        

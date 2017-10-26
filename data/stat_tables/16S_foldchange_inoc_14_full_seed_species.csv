@@ -1,0 +1,5 @@
+"","baseMean","log2FoldChange","lfcSE","stat","pvalue","padj","Kingdom","Phylum","Class","Order","Family","Genus","Species"
+"10016",7.36601891952087,4.64797586171773,1.05197907349535,4.41831589508161,9.947296121598e-06,0.0094549049635789,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA
+"3",40.8233796847762,4.95307408983521,0.925967603490448,5.349079245499,8.84028295989226e-08,0.000168053779067552,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA
+"9028",212.779375946386,5.63474463643904,0.799595207902524,7.0469965061696,1.82820907835314e-12,6.95085091589865e-09,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA
+"New.ReferenceOTU387",13.6055460743024,5.12560344006182,0.984710051122692,5.20519053727338,1.93797655227843e-07,0.000245606228392087,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA

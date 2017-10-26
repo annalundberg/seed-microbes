@@ -1,0 +1,5 @@
+"","baseMean","log2FoldChange","lfcSE","stat","pvalue","padj","Kingdom","Phylum","Class","Order","Family","Genus","Species"
+"252",15.6970274799345,-2.22168472711291,0.662448109934876,-3.35374906169077,0.000797246284419697,0.021791398440805,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Streptomycetaceae","Streptomyces","mirabilis"
+"41",26.2121315625262,3.17291279128806,0.875718382082311,3.62321136133217,0.000290967866388781,0.01192968252194,"Bacteria","Actinobacteria","Actinobacteria","Actinomycetales","Nocardiaceae","Rhodococcus",NA
+"New.ReferenceOTU507",11.2275748649298,1.74796176515812,0.534334050140754,3.27129024380474,0.00107057973712978,0.0219468846111606,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Aerococcaceae","Facklamia",NA
+"1",259.978990376303,4.63296846335854,0.539778238905498,8.58309603727775,9.23531912820463e-18,7.57296168512779e-16,"Bacteria","Proteobacteria","Gammaproteobacteria","Xanthomonadales","Xanthomonadaceae","Stenotrophomonas",NA
